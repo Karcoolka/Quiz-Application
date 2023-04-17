@@ -8,11 +8,9 @@ app.use("/api", indexAPI);//prefix endpointu
 app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.set("view engine", "ejs");
-
 
 app.get("/", (req, res) => {
-  res.redirect("/api/game");
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 app.get("/game", (req, res) => {

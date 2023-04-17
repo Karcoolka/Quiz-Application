@@ -43,46 +43,6 @@ let connection = mysql.createConnection({
               connection.query(
                 `SELECT * FROM answers WHERE question_id = ?;`,
                 [questionsNum],
-                (err, answersFromDb) => {
-                  if (err) {
-                    console.log(err);
-                    res.status(500).send(mysqlError);
-                    return;
-                  }
-
-                  let result = {id: questions[0].id, questions: questions[0].question, answers : answersFromDb}
-                  // res.status(200).json(result); //because query is array!!! and I want first match
-                  
-                  res.render("index", result);
-                });              
-            });
-    });
-  });
-
-  app.get("/game/getAnswers", (req, res) =>{
-    
-    connection.query('SELECT * FROM questions;',
-    (err, amountOfQuestions) => {
-        if(err) {
-            res.status(500).send(mysqlError);
-            return;
-        }
-
-        let questionsNum = Math.floor(Math.random() * (amountOfQuestions.length - 1 + 1) + 1);
-        
-        connection.query(
-            `SELECT * FROM questions WHERE id = ?;`,
-            [questionsNum],
-            (err, questions) => {
-              if (err) {
-                console.log(err);
-                res.status(500).send(mysqlError);
-                return;
-              }
-              
-              connection.query(
-                `SELECT * FROM answers WHERE question_id = ?;`,
-                [questionsNum],
                 (err, answers) => {
                   if (err) {
                     console.log(err);
@@ -91,6 +51,7 @@ let connection = mysql.createConnection({
                   }
 
                   let result = {id: questions[0].id, questions: questions[0].question, answers : answers}
+                  
                   res.status(200).json(result); //because query is array!!! and I want first match
                 });              
             });
@@ -108,13 +69,14 @@ let connection = mysql.createConnection({
             return;
           }
           res.status(200).json(data); //data is array of questions
+          
         }
       );
   })
 
   app.post("/questions", (req, res) => {
     const question = req.body.question;
-    const answers = req.body.answers;
+    const answers = req.body.answers;//array of answers
     
     connection.query(
         `INSERT INTO questions (question) VALUES (?)`,

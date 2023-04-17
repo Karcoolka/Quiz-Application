@@ -10,15 +10,11 @@
 <body>
     <h1>SCORE:<span id="score-number"></span></h1>
     <div class="main" id="main-div">
-        <!-- let result = {id: questions[0].id, questions: questions[0].question, answers : answers} -->        
         <h2>Question</h2>
-            <h3> <%=questions %> </h3> 
-            <% for(let myAnswer of answers) { %>
-                <button class="option"><%= myAnswer.answer %></button>
-                <!-- answers is array of objects returned from SQL  -->
-                <!-- myAswer is object returned from SQL  -->
-                <!-- answer is column from SQL  -->            
-            <% } %>
+        <!-- <button class="option" id="one">placeholder</button>
+        <button class="option" id="two"></button>
+        <button class="option" id="three"></button>
+        <button class="option" id="four"></button> -->
     </div>
     <a href="/questions">Manage questions</a>
     

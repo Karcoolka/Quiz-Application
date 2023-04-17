@@ -8,48 +8,51 @@ function updateScoreDisplay(){
     scoreDisplay.textContent = score;
 }
 
-function fillElements(json){
-    const question = document.querySelector("h3");
-    question.setAttribute("id", "question");    
+function createElements(jsonResult){
     
-    const buttons = document.querySelectorAll("button");
-    
-    for(let i = 0; i < buttons.length; i++){
-        buttons[i].addEventListener("click", () => {
-            buttons[i].classList.add('selected');
-            buttons.forEach((button) => {
+    const question = document.createElement("h3");
+    question.setAttribute("id", "question");
+    question.textContent = jsonResult.questions; //json.qestion (json is rensponse from BE with property question)
+    quizContainer.appendChild(question);
+
+    for(let answerObject of jsonResult.answers){
+        const answerButton = document.createElement("button");
+        answerButton.classList.add("option");
+        answerButton.textContent = answerObject.answer;
+
+        answerButton.addEventListener("click", () => {
+            answerButton.classList.add('selected');
+//if any is selected, the rest of buttons must be disabled
+            document.querySelectorAll('button').forEach((button) => {
                 button.setAttribute('disabled', 'true');
               });
 
-              for(let answerObject of json.answers){
-    
-            setTimeout(()=>{
+              setTimeout(()=>{
                 if(answerObject.is_correct === 1){
                     updateScoreDisplay();
-                    buttons[i].classList.remove("selected");
-                    buttons[i].classList.add("correct");
+                    answerButton.classList.remove("selected");
+                    answerButton.classList.add("correct");
                 }else{
-                    buttons[i].classList.remove("selected");
-                    buttons[i].classList.add("wrong");
+                    answerButton.classList.remove("selected");
+                    answerButton.classList.add("wrong");
                 }
               }, 3000);
-    
+
               setTimeout(()=> {
                 quizContainer.innerHTML = "";
-                loadQuestions();//does not work from this point :(((
-                // window.location.href = window.location.href;
-                
+                loadQuestions();
               },6000);
-            }
         });
+
+        quizContainer.appendChild(answerButton);
     }
-} 
+}
 
 function loadQuestions(){
-    fetch("/api/game/getAnswers") //fetch zamíří na get endpoint /game a vyžádá si res (res jsou data z db)
+    fetch("/api/game") //fetch zamíří na get endpoint /game a vyžádá si res (res jsou data z db)
     .then((res) => res.json()) //convert res to json
     .then((json) => {
-        fillElements(json);
+        createElements(json);
     })
     .catch((err) => console.log(err));
 }

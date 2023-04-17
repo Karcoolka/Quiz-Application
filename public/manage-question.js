@@ -43,8 +43,10 @@ function renderQuestions(jsonResult) {
 
 function loadListOfQuestions() {
   fetch("/api/questions")//method GET
-    .then((res) => res.json())
+    .then((res) => res.json()) //promise
+    
     .then((json) => {
+      console.log(json)
       renderQuestions(json);
     })
     .catch((err) => console.log(err));
@@ -73,8 +75,9 @@ function sendToBackend() {
   const question = document.getElementById("question").value;
 
   const radios = document.querySelectorAll(".input-radio");
-  const rawAnswers = document.querySelectorAll(".answer");
+  const rawAnswers = document.querySelectorAll(".answer");//array
 
+  //----at least 2 answers accept-------
   const answers = [];
   for (let i = 0; i < rawAnswers.length; i++) {
     if (rawAnswers[i].value === "" && radios[i].checked) {
